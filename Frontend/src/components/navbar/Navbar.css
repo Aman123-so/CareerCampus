@@ -1,0 +1,21 @@
+nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background-color: #1e293b;
+}
+nav h2{
+    color: white;
+}
+nav div{
+    display: flex;
+    gap:25px;
+
+}
+nav a{
+    color : white;
+    text-decoration: non;
+    font-size: 16px;
+    
+}
