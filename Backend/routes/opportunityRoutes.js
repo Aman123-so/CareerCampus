@@ -21,6 +21,12 @@ router.get('/:id', async (req, res) => {
   try {
 
     const opportunity = await Opportunity.findById(req.params.id)
+      if(!opportunity){
+        return res.status(404).json({
+          message: "Opportunity is not found"
+        })
+      }
+     res.json(opportunity)
 
     res.json(opportunity)
 
