@@ -15,7 +15,7 @@ router.get('/',async( req, res)=>{
     }
 })
 
-
+   // get ID
 router.get('/:id', async (req, res) => {
 
   try {
@@ -28,8 +28,6 @@ router.get('/:id', async (req, res) => {
       }
      res.json(opportunity)
 
-    res.json(opportunity)
-
   } catch (error) {
 
     res.status(500).json({
@@ -40,10 +38,31 @@ router.get('/:id', async (req, res) => {
 
 })
 
+// Update Route
 
+router.put('/:id', async( req, res)=>{
+  try{
+    const opportunity= await Opportunity.findByIdAndDelete(req.params.id, req.body, {new: true, runvalidators: true})
 
+    if(!opportunity){
+      return res.status(404).json({
+        message: "Opportunity not found"
+      })
+    }
+    res.json({
+      message: "Opportunity update successfully",
+      data: opportunity
+    })
+  }
+    catch(error){
+      res.status(404).json({
+        message: error.message
+      })
+    }
 
-//post route
+  })
+
+  //post route
 
 router.post('/', async (req, res) => {
   try {
