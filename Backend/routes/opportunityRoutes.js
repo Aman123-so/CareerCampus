@@ -16,6 +16,27 @@ router.get('/',async( req, res)=>{
 })
 
 
+router.get('/:id', async (req, res) => {
+
+  try {
+
+    const opportunity = await Opportunity.findById(req.params.id)
+
+    res.json(opportunity)
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: "Error fetching opportunity"
+    })
+
+  }
+
+})
+
+
+
+
 //post route
 
 router.post('/', async (req, res) => {
@@ -35,6 +56,23 @@ router.post('/', async (req, res) => {
 })
 
 
+// delete Route
+
+router.delete('/:id', async( req, res)=>{
+  try{
+    await Opportunity.findByIdAndDelete(req.params.id)
+
+    res.json({
+      message:"Opportunity deleted successfully"
+    })
+
+  }
+  catch(error){
+    res.status(500).json({
+      message:"Error deleting opportunity"
+    })
+  }
+})
 
 
 module.exports = router
