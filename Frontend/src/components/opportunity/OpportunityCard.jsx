@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const OpportunityCard = (props) => {
 
-  const [saved, setSaved] = useState(false)
+  const navigate = useNavigate()
 
   return (
     <div>
@@ -11,17 +11,26 @@ const OpportunityCard = (props) => {
       <p>{props.location}</p>
       <p>{props.type}</p>
 
-      <button onClick={() => setSaved(!saved)}>
-        {saved ? "❤️ Saved" : "🤍 Save Opportunity"}
+      <button>
+        🤍 Save Opportunity
       </button>
-      <button onClick={()=>{
-        fetch(`http://localhost:5000/api/opportunities/${props.id}`,{
-          method:"DELETE"
-        })
-        .then(()=>{
-          props.onDelete(props.id)
-        })
-      }}>Delete</button>
+
+      <button onClick={() => navigate(`/edit-opportunity/${props.id}`)}>
+        Edit
+      </button>
+
+      <button
+        onClick={() => {
+          fetch(`http://localhost:5000/api/opportunities/${props.id}`, {
+            method: "DELETE"
+          })
+            .then(() => {
+              props.onDelete(props.id)
+            })
+        }}
+      >
+        Delete
+      </button>
 
       <hr />
     </div>

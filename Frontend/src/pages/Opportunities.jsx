@@ -37,7 +37,7 @@ const Opportunities = () => {
            company={opportunity.company} 
            location={opportunity.location} 
           type={opportunity.type} 
-          OnDelete={handleDelete}
+          onDelete={handleDelete}
         />
       ))}
 
