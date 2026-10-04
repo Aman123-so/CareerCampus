@@ -5,6 +5,12 @@ const Opportunities = () => {
 
   const [opportunities, setOpportunities] = useState([])
 
+  const handleDelete= (id)=>{
+    setOpportunities(
+      opportunities.filter((opportunity)=>opportunity._id !=id)
+    )
+  }
+
   useEffect(() => {
 
     fetch('http://localhost:5000/api/opportunities')
@@ -25,11 +31,13 @@ const Opportunities = () => {
 
       {opportunities.map((opportunity) => (
         <OpportunityCard
-          key={opportunity.title}
-          title={opportunity.title}
-          company={opportunity.company}
-          location={opportunity.location}
-          type={opportunity.type}
+          key={opportunity._id}
+          id={opportunity._id}
+           title={opportunity.title} 
+           company={opportunity.company} 
+           location={opportunity.location} 
+          type={opportunity.type} 
+          OnDelete={handleDelete}
         />
       ))}
 

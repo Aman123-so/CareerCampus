@@ -85,8 +85,14 @@ router.post('/', async (req, res) => {
 
 router.delete('/:id', async( req, res)=>{
   try{
-    await Opportunity.findByIdAndDelete(req.params.id)
+     const opportunity= await Opportunity.findByIdAndDelete(req.params.id)
 
+
+     if(!opportunity){
+      return res.status(404).json({
+        message: "Oppertunity not found"
+      })
+     }
     res.json({
       message:"Opportunity deleted successfully"
     })

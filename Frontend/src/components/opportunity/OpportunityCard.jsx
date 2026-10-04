@@ -14,6 +14,14 @@ const OpportunityCard = (props) => {
       <button onClick={() => setSaved(!saved)}>
         {saved ? "❤️ Saved" : "🤍 Save Opportunity"}
       </button>
+      <button onClick={()=>{
+        fetch(`http://localhost:5000/api/opportunities/${props.id}`,{
+          method:"DELETE"
+        })
+        .then(()=>{
+          props.onDelete(props.id)
+        })
+      }}>Delete</button>
 
       <hr />
     </div>
