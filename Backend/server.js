@@ -3,7 +3,7 @@ const cors = require('cors')
 const mongoose= require('mongoose')
 const Opportunity = require('./models/Opportunity')
 const opportunityRoutes = require('./routes/opportunityRoutes')
-
+const userRoutes = require('./routes/userRoutes')
 require('dotenv').config()
 const app = express()
 
@@ -14,6 +14,7 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/api/opportunities', opportunityRoutes)
+app.use('/api/users', userRoutes)
 
 mongoose.connect(process.env.MONGO_URI)
 .then(()=>{

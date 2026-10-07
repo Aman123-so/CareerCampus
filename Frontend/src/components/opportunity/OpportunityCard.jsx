@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const OpportunityCard = (props) => {
 
   const navigate = useNavigate()
+  const [saved, setSaved]= useState(false)
 
   return (
     <div>
@@ -11,8 +13,11 @@ const OpportunityCard = (props) => {
       <p>{props.location}</p>
       <p>{props.type}</p>
 
-      <button>
-        🤍 Save Opportunity
+     
+      {/* Save Button */}
+
+      <button onClick={() => setSaved(!saved)}>
+        {saved ? "❤️ Saved" : "🤍 Save Opportunity"}
       </button>
 
       <button onClick={() => navigate(`/edit-opportunity/${props.id}`)}>
