@@ -20,15 +20,23 @@ const Login = () => {
     })
   })
 
-    .then((response) => response.json())
+   .then(async (response) => {
+  const data = await response.json()
 
-    .then((data) => {
+  console.log(data)
 
-      console.log(data)
+  if (!response.ok) {
+    alert(data.message)
+    return
+  }
 
-      alert(data.message)
+  if (data.token) {
+    localStorage.setItem('token', data.token)
+    localStorage.setItem('user', JSON.stringify(data.data))
+  }
 
-    })
+  alert(data.message)
+})
 
     .catch((error) => {
       console.log("Error:", error)

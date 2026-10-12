@@ -15,7 +15,12 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
-  }
+  },
+
+  savedOpportunities: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Opportunity'
+  }]
 })
 
 const User = mongoose.model('User', userSchema)
