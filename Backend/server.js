@@ -6,6 +6,7 @@ const opportunityRoutes = require('./routes/opportunityRoutes')
 const userRoutes = require('./routes/userRoutes')
 require('dotenv').config()
 const app = express()
+const applicationRoutes = require('./routes/applicationRoutes')
 
 
 const PORT = 5000
@@ -15,6 +16,7 @@ app.use(express.json())
 
 app.use('/api/opportunities', opportunityRoutes)
 app.use('/api/users', userRoutes)
+app.use('/api/applications', applicationRoutes)
 
 mongoose.connect(process.env.MONGO_URI)
 .then(()=>{

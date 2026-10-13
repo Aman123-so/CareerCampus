@@ -3,10 +3,25 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const OpportunityCard = (props) => {
-
   const navigate = useNavigate()
+
   const [saved, setSaved] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [applying, setApplying] = useState(false)
+
+  // Get the logged-in user's role
+  const storedUser = localStorage.getItem('user')
+  let userRole = 'student'
+
+  try {
+    userRole = storedUser
+      ? JSON.parse(storedUser).role || 'student'
+      : 'student'
+  } catch {
+    userRole = 'student'
+  }
+
+  const isAdmin = userRole === 'admin'
 
   // Check whether this opportunity is already saved
   useEffect(() => {
@@ -33,13 +48,12 @@ const OpportunityCard = (props) => {
           return
         }
 
-        const data = await response.json()
-
-        const savedIds = data.data.savedOpportunities || []
+        const result = await response.json()
+        const savedIds = result.data.savedOpportunities || []
 
         setSaved(
-          savedIds.some(id =>
-            (typeof id === 'string' ? id : id._id) === props.id
+          savedIds.some((item) =>
+            (typeof item === 'string' ? item : item._id) === props.id
           )
         )
       } catch (error) {
@@ -73,15 +87,15 @@ const OpportunityCard = (props) => {
         }
       )
 
-      const data = await response.json()
+      const result = await response.json()
 
       if (!response.ok) {
-        alert(data.message || 'Could not update saved opportunity')
+        alert(result.message || 'Could not update saved opportunity')
         return
       }
 
       setSaved(!saved)
-      alert(data.message)
+      alert(result.message)
     } catch (error) {
       console.log('Save error:', error)
       alert('Unable to connect to server')
@@ -90,12 +104,101 @@ const OpportunityCard = (props) => {
     }
   }
 
+  // Apply for opportunity
+  const handleApply = async () => {
+    const token = localStorage.getItem('token')
+
+    if (!token) {
+      alert('Please login to apply')
+      navigate('/login')
+      return
+    }
+
+    setApplying(true)
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/applications/${props.id}`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        alert(result.message || 'Unable to apply')
+        return
+      }
+
+      alert(result.message || 'Application submitted successfully!')
+    } catch (error) {
+      console.log('Application error:', error)
+      alert('Unable to connect to server')
+    } finally {
+      setApplying(false)
+    }
+  }
+
+  // Delete opportunity (admin only)
+  const handleDelete = async () => {
+    if (!isAdmin) {
+      alert('Only admins can delete opportunities')
+      return
+    }
+
+    const token = localStorage.getItem('token')
+
+    if (!token) {
+      alert('Please login again')
+      navigate('/login')
+      return
+    }
+
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this opportunity?'
+    )
+
+    if (!confirmed) return
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/opportunities/${props.id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      const result = await response.json().catch(() => ({}))
+
+      if (!response.ok) {
+        alert(result.message || 'Failed to delete opportunity')
+        return
+      }
+
+      if (props.onDelete) {
+        props.onDelete(props.id)
+      }
+
+      alert(result.message || 'Opportunity deleted successfully')
+    } catch (error) {
+      console.log('Delete error:', error)
+      alert('Unable to connect to server')
+    }
+  }
+
   return (
     <div>
       <h2>{props.title}</h2>
-      <p>{props.company}</p>
-      <p>{props.location}</p>
-      <p>{props.type}</p>
+      <p>Company: {props.company}</p>
+      <p>Location: {props.location}</p>
+      <p>Type: {props.type}</p>
 
       <button onClick={handleSave} disabled={saving}>
         {saving
@@ -105,34 +208,23 @@ const OpportunityCard = (props) => {
             : '🤍 Save Opportunity'}
       </button>
 
-      <button
-        onClick={() => navigate(`/edit-opportunity/${props.id}`)}
-      >
-        Edit
+      <button onClick={handleApply} disabled={applying}>
+        {applying ? 'Applying...' : 'Apply Now'}
       </button>
 
-      <button
-        onClick={async () => {
-          try {
-            const response = await fetch(
-              `http://localhost:5000/api/opportunities/${props.id}`,
-              { method: 'DELETE' }
-            )
+      {isAdmin && (
+        <>
+          <button
+            onClick={() => navigate(`/edit-opportunity/${props.id}`)}
+          >
+            Edit
+          </button>
 
-            if (!response.ok) {
-              alert('Failed to delete opportunity')
-              return
-            }
-
-            props.onDelete(props.id)
-          } catch (error) {
-            console.log('Delete error:', error)
-            alert('Unable to connect to server')
-          }
-        }}
-      >
-        Delete
-      </button>
+          <button onClick={handleDelete}>
+            Delete
+          </button>
+        </>
+      )}
 
       <hr />
     </div>

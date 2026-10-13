@@ -26,9 +26,11 @@ const Navbar = () => {
       <h2>Smart Campus</h2>
 
       <div>
-        <Link to="/">Home</Link>
-  <Link to="/opportunities">Opportunities</Link>
-  <Link to="/profile">Profile</Link>
+      <Link to="/">Home</Link>
+<Link to="/opportunities">Opportunities</Link>
+<Link to="/profile">Profile</Link>
+<Link to="/saved-opportunities">Saved Opportunities</Link>
+<Link to="/my-applications">My Applications</Link>
 
   {user ? (
     <>

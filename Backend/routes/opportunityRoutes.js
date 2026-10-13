@@ -3,22 +3,24 @@ const express = require('express')
 const Opportunity = require('../models/Opportunity')
 const User = require('../models/User')
 const authMiddleware = require('../middleware/authMiddleware')
+const adminMiddleware = require('../middleware/adminMiddleware')
 
 const router = express.Router()
 
-// GET ALL OPPORTUNITIES
+// GET ALL OPPORTUNITIES (PUBLIC)
 router.get('/', async (req, res) => {
   try {
     const opportunities = await Opportunity.find()
     res.json(opportunities)
   } catch (error) {
+    console.error('Fetch opportunities error:', error.message)
     res.status(500).json({
       message: 'Failed to fetch opportunities'
     })
   }
 })
 
-// GET SINGLE OPPORTUNITY
+// GET SINGLE OPPORTUNITY (PUBLIC)
 router.get('/:id', async (req, res) => {
   try {
     const opportunity = await Opportunity.findById(req.params.id)
@@ -31,14 +33,14 @@ router.get('/:id', async (req, res) => {
 
     res.json(opportunity)
   } catch (error) {
-    res.status(500).json({
-      message: 'Failed to fetch opportunity'
+    res.status(400).json({
+      message: 'Invalid opportunity ID'
     })
   }
 })
 
-// ADD OPPORTUNITY
-router.post('/', async (req, res) => {
+// ADD OPPORTUNITY (ADMIN ONLY)
+router.post('/', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const opportunity = await Opportunity.create(req.body)
 
@@ -47,14 +49,15 @@ router.post('/', async (req, res) => {
       data: opportunity
     })
   } catch (error) {
+    console.error('Add opportunity error:', error.message)
     res.status(400).json({
       message: 'Failed to add opportunity'
     })
   }
 })
 
-// UPDATE OPPORTUNITY
-router.put('/:id', async (req, res) => {
+// UPDATE OPPORTUNITY (ADMIN ONLY)
+router.put('/:id', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const opportunity = await Opportunity.findByIdAndUpdate(
       req.params.id,
@@ -76,14 +79,15 @@ router.put('/:id', async (req, res) => {
       data: opportunity
     })
   } catch (error) {
+    console.error('Update opportunity error:', error.message)
     res.status(400).json({
       message: 'Failed to update opportunity'
     })
   }
 })
 
-// DELETE OPPORTUNITY
-router.delete('/:id', async (req, res) => {
+// DELETE OPPORTUNITY (ADMIN ONLY)
+router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const opportunity = await Opportunity.findByIdAndDelete(
       req.params.id
@@ -99,7 +103,8 @@ router.delete('/:id', async (req, res) => {
       message: 'Opportunity deleted successfully'
     })
   } catch (error) {
-    res.status(500).json({
+    console.error('Delete opportunity error:', error.message)
+    res.status(400).json({
       message: 'Failed to delete opportunity'
     })
   }
@@ -138,6 +143,7 @@ router.post('/:id/save', authMiddleware, async (req, res) => {
       savedOpportunities: user.savedOpportunities
     })
   } catch (error) {
+    console.error('Save opportunity error:', error.message)
     res.status(500).json({
       message: 'Failed to save opportunity'
     })
@@ -166,6 +172,7 @@ router.delete('/:id/save', authMiddleware, async (req, res) => {
       savedOpportunities: user.savedOpportunities
     })
   } catch (error) {
+    console.error('Unsave opportunity error:', error.message)
     res.status(500).json({
       message: 'Failed to remove saved opportunity'
     })
