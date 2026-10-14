@@ -5,13 +5,13 @@ const router = express.Router()
 const Application = require('../models/Application')
 const Opportunity = require('../models/Opportunity')
 const authMiddleware = require('../middleware/authMiddleware')
+const adminMiddleware = require('../middleware/adminMiddleware')
 
-// APPLY FOR AN OPPORTUNITY
+// Student applies for an opportunity
 router.post('/:opportunityId', authMiddleware, async (req, res) => {
   try {
     const { opportunityId } = req.params
 
-    // Check whether opportunity exists
     const opportunity = await Opportunity.findById(opportunityId)
 
     if (!opportunity) {
@@ -20,50 +20,129 @@ router.post('/:opportunityId', authMiddleware, async (req, res) => {
       })
     }
 
-    // Create application for the logged-in user
     const application = await Application.create({
       student: req.userId,
       opportunity: opportunityId
     })
 
-    res.status(201).json({
+    return res.status(201).json({
       message: 'Application submitted successfully',
       data: application
     })
   } catch (error) {
-    // MongoDB duplicate key error
     if (error.code === 11000) {
       return res.status(409).json({
         message: 'You have already applied for this opportunity'
       })
     }
 
-    console.error('Application error:', error.message)
+    console.error('Apply error:', error)
 
-    res.status(500).json({
-      message: 'Unable to submit application'
+    return res.status(500).json({
+      message: 'Server error while submitting application'
     })
   }
 })
 
-// GET MY APPLICATIONS
+// Admin gets all student applications
+router.get('/all', authMiddleware, adminMiddleware, async (req, res) => {
+  try {
+    const applications = await Application.find()
+      .populate('student', 'name email')
+      .populate('opportunity', 'title company location type')
+      .sort({ createdAt: -1 })
+
+    return res.status(200).json({
+      message: 'Applications fetched successfully',
+      data: applications
+    })
+  } catch (error) {
+    console.error('Fetch all applications error:', error)
+
+    return res.status(500).json({
+      message: 'Server error while fetching applications'
+    })
+  }
+})
+
+// Admin updates an application's status
+router.patch(
+  '/:id/status',
+  authMiddleware,
+  adminMiddleware,
+  async (req, res) => {
+    try {
+      const { status } = req.body
+
+      const allowedStatuses = [
+        'Pending',
+        'Reviewed',
+        'Shortlisted',
+        'Rejected',
+        'Accepted'
+      ]
+
+      if (!allowedStatuses.includes(status)) {
+        return res.status(400).json({
+          message: 'Invalid application status'
+        })
+      }
+
+      const application = await Application.findOneAndUpdate(
+        { _id: req.params.id },
+        { $set: { status } },
+        {
+          returnDocument: 'after',
+          runValidators: true
+        }
+      )
+        .populate('student', 'name email')
+        .populate('opportunity', 'title company location type')
+
+      if (!application) {
+        return res.status(404).json({
+          message: 'Application not found'
+        })
+      }
+
+      return res.status(200).json({
+        message: 'Application status updated successfully',
+        data: application
+      })
+    } catch (error) {
+      console.error('Update application status error:', error)
+
+      if (error.name === 'CastError') {
+        return res.status(400).json({
+          message: 'Invalid application ID'
+        })
+      }
+
+      return res.status(500).json({
+        message: 'Server error while updating application status'
+      })
+    }
+  }
+)
+
+// Student gets their own applications
 router.get('/my-applications', authMiddleware, async (req, res) => {
   try {
     const applications = await Application.find({
       student: req.userId
     })
-      .populate('opportunity')
+      .populate('opportunity', 'title company location type')
       .sort({ createdAt: -1 })
 
-    res.json({
-      message: 'Applications fetched successfully',
+    return res.status(200).json({
+      message: 'Your applications fetched successfully',
       data: applications
     })
   } catch (error) {
-    console.error('Fetch applications error:', error.message)
+    console.error('Fetch my applications error:', error)
 
-    res.status(500).json({
-      message: 'Unable to fetch applications'
+    return res.status(500).json({
+      message: 'Server error while fetching your applications'
     })
   }
 })

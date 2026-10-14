@@ -14,6 +14,7 @@ import SavedOpportunities from './pages/SavedOpportunities'
 import MyApplications from './pages/MyApplications'
 import AdminDashboard from './pages/AdminDashboard'
 import AddOpportunity from './pages/AddOpportunity'
+import AdminApplications from './pages/AdminApplications'
 
 // Admin-only route protection
 const AdminRoute = ({ children }) => {
@@ -59,8 +60,36 @@ const App = () => {
         <Route path="/edit-opportunity/:id" element={<EditOpportunity />} />
 
         {/* Admin Dashboard */}
-       <Route path="/admin" element={<AdminDashboard />} />
-       <Route path="/admin/add-opportunity" element={<AddOpportunity />} />
+      
+<Route
+  path="/admin"
+  element={
+    <AdminRoute>
+      <AdminDashboard />
+    </AdminRoute>
+  }
+/>
+
+<Route
+  path="/admin/add-opportunity"
+  element={
+    <AdminRoute>
+      <AddOpportunity />
+    </AdminRoute>
+  }
+/>
+
+<Route
+  path="/admin/applications"
+  element={
+    <AdminRoute>
+      <AdminApplications />
+    </AdminRoute>
+  }
+/>
+
+ 
+  
 
         {/* Unknown URL */}
         <Route path="*" element={<Navigate to="/" replace />} />
