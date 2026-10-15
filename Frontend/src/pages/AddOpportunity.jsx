@@ -1,6 +1,7 @@
 
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import './AddOpportunity.css'
 
 const AddOpportunity = () => {
   const navigate = useNavigate()
@@ -14,6 +15,7 @@ const AddOpportunity = () => {
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -22,16 +24,20 @@ const AddOpportunity = () => {
       ...prev,
       [name]: value
     }))
+
+    setError('')
+    setSuccess('')
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
+    setSuccess('')
 
     const token = localStorage.getItem('token')
 
     if (!token) {
-      setError('Please login first.')
+      setError('Please log in before publishing an opportunity.')
       return
     }
 
@@ -46,7 +52,12 @@ const AddOpportunity = () => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
           },
-          body: JSON.stringify(formData)
+          body: JSON.stringify({
+            title: formData.title.trim(),
+            company: formData.company.trim(),
+            location: formData.location.trim(),
+            type: formData.type
+          })
         }
       )
 
@@ -56,89 +67,161 @@ const AddOpportunity = () => {
         throw new Error(data.message || 'Failed to add opportunity.')
       }
 
-      alert('Opportunity added successfully!')
-      navigate('/opportunities')
+      setSuccess('Opportunity published successfully!')
+
+      setTimeout(() => {
+        navigate('/opportunities')
+      }, 800)
     } catch (err) {
-      setError(err.message || 'Something went wrong.')
+      setError(err.message || 'Something went wrong. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div style={{ maxWidth: '500px', margin: '30px auto', padding: '20px' }}>
-      <h1>Add Opportunity</h1>
-      <p>Publish a new job or internship for students.</p>
-
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '15px' }}>
-          <label>Opportunity Title</label>
-          <input
-            type="text"
-            name="title"
-            placeholder="e.g. React Developer Internship"
-            value={formData.title}
-            onChange={handleChange}
-            required
-            style={inputStyle}
-          />
-        </div>
-
-        <div style={{ marginBottom: '15px' }}>
-          <label>Company</label>
-          <input
-            type="text"
-            name="company"
-            placeholder="e.g. Google"
-            value={formData.company}
-            onChange={handleChange}
-            required
-            style={inputStyle}
-          />
-        </div>
-
-        <div style={{ marginBottom: '15px' }}>
-          <label>Location</label>
-          <input
-            type="text"
-            name="location"
-            placeholder="e.g. Noida"
-            value={formData.location}
-            onChange={handleChange}
-            required
-            style={inputStyle}
-          />
-        </div>
-
-        <div style={{ marginBottom: '20px' }}>
-          <label>Type</label>
-          <select
-            name="type"
-            value={formData.type}
-            onChange={handleChange}
-            style={inputStyle}
-          >
-            <option value="Internship">Internship</option>
-            <option value="Job">Job</option>
-          </select>
-        </div>
-
-        <button type="submit" disabled={loading}>
-          {loading ? 'Adding...' : 'Add Opportunity'}
+    <main className="add-opportunity-page">
+      <div className="add-opportunity-container">
+        <button
+          type="button"
+          className="add-back-link"
+          onClick={() => navigate('/admin')}
+        >
+          ← Back to Dashboard
         </button>
-      </form>
-    </div>
-  )
-}
 
-const inputStyle = {
-  display: 'block',
-  width: '100%',
-  boxSizing: 'border-box',
-  padding: '10px',
-  marginTop: '6px'
+        <header className="add-opportunity-header">
+          <div className="add-header-icon">✦</div>
+          <span className="add-eyebrow">OPPORTUNITY MANAGEMENT</span>
+          <h1>Add New Opportunity</h1>
+          <p>
+            Publish a job or internship to help students discover
+            their next career opportunity.
+          </p>
+        </header>
+
+        <section className="add-opportunity-card">
+          <div className="add-card-heading">
+            <div>
+              <h2>Opportunity Details</h2>
+              <p>Enter the information students will see.</p>
+            </div>
+            <span className="add-required-note">* Required fields</span>
+          </div>
+
+          {error && (
+            <div className="add-message add-error" role="alert">
+              <span>⚠</span>
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="add-message add-success" role="status">
+              <span>✓</span>
+              {success}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <div className="add-form-group">
+              <label htmlFor="opportunity-title">
+                Opportunity Title <span>*</span>
+              </label>
+              <input
+                id="opportunity-title"
+                type="text"
+                name="title"
+                placeholder="e.g. React Developer Internship"
+                value={formData.title}
+                onChange={handleChange}
+                maxLength={120}
+                required
+              />
+              <small>Use a clear title that describes the role.</small>
+            </div>
+
+            <div className="add-form-group">
+              <label htmlFor="opportunity-company">
+                Company Name <span>*</span>
+              </label>
+              <input
+                id="opportunity-company"
+                type="text"
+                name="company"
+                placeholder="e.g. Google"
+                value={formData.company}
+                onChange={handleChange}
+                maxLength={100}
+                required
+              />
+            </div>
+
+            <div className="add-form-row">
+              <div className="add-form-group">
+                <label htmlFor="opportunity-location">
+                  Location <span>*</span>
+                </label>
+                <input
+                  id="opportunity-location"
+                  type="text"
+                  name="location"
+                  placeholder="e.g. Noida"
+                  value={formData.location}
+                  onChange={handleChange}
+                  maxLength={100}
+                  required
+                />
+              </div>
+
+              <div className="add-form-group">
+                <label htmlFor="opportunity-type">
+                  Opportunity Type <span>*</span>
+                </label>
+                <select
+                  id="opportunity-type"
+                  name="type"
+                  value={formData.type}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="Internship">Internship</option>
+                  <option value="Job">Full-time Job</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="add-form-footer">
+              <p>Review the details before publishing.</p>
+
+              <div className="add-form-buttons">
+                <button
+                  type="button"
+                  className="add-cancel-btn"
+                  onClick={() => navigate('/admin')}
+                  disabled={loading}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  className="add-submit-btn"
+                  disabled={loading}
+                >
+                  {loading ? 'Publishing...' : 'Publish Opportunity →'}
+                </button>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <p className="add-page-footer">
+          🎓 Smart Campus · Connecting students with opportunities
+        </p>
+      </div>
+    </main>
+  )
 }
 
 export default AddOpportunity

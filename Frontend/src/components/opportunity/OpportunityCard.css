@@ -1,0 +1,220 @@
+
+.opportunity-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 23px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.opportunity-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.09);
+  border-color: #cbdcfb;
+}
+
+.opportunity-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 17px;
+}
+
+.opportunity-type {
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.saved-indicator {
+  color: #be185d;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.opportunity-title {
+  margin: 0 0 18px;
+  color: #0f172a;
+  font-size: 20px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.opportunity-details {
+  display: grid;
+  gap: 13px;
+  margin-bottom: 22px;
+}
+
+.opportunity-details p {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: 0;
+}
+
+.detail-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 35px;
+  height: 35px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 18px;
+}
+
+.opportunity-details p small,
+.opportunity-details p strong {
+  display: block;
+}
+
+.opportunity-details p small {
+  margin-bottom: 3px;
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.opportunity-details p strong {
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.opportunity-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.action-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  min-height: 38px;
+  padding: 9px 13px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.action-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Save */
+.save-btn {
+  border-color: #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+}
+
+.save-btn:hover:not(:disabled) {
+  border-color: #f9a8d4;
+  background: #fdf2f8;
+  color: #be185d;
+}
+
+.save-btn.is-saved {
+  border-color: #fbcfe8;
+  background: #fce7f3;
+  color: #be185d;
+}
+
+/* Apply */
+.apply-btn {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.15);
+}
+
+.apply-btn:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+/* Admin actions */
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  margin-top: 2px;
+}
+
+.edit-btn {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.edit-btn:hover:not(:disabled) {
+  border-color: #93c5fd;
+  background: #dbeafe;
+}
+
+.delete-btn {
+  border-color: #fecaca;
+  background: #fff1f2;
+  color: #dc2626;
+}
+
+.delete-btn:hover:not(:disabled) {
+  border-color: #fca5a5;
+  background: #fee2e2;
+}
+
+/* Keyboard focus */
+.action-btn:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 2px;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .opportunity-card {
+    padding: 18px;
+  }
+
+  .opportunity-actions {
+    gap: 8px;
+  }
+
+  .action-btn {
+    padding: 9px 11px;
+    font-size: 12px;
+  }
+
+  .admin-actions .action-btn {
+    flex: 1;
+  }
+}

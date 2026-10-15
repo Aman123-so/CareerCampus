@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import './OpportunityCard.css'
 
 const OpportunityCard = (props) => {
   const navigate = useNavigate()
@@ -9,7 +10,6 @@ const OpportunityCard = (props) => {
   const [saving, setSaving] = useState(false)
   const [applying, setApplying] = useState(false)
 
-  // Get the logged-in user's role
   const storedUser = localStorage.getItem('user')
   let userRole = 'student'
 
@@ -23,7 +23,6 @@ const OpportunityCard = (props) => {
 
   const isAdmin = userRole === 'admin'
 
-  // Check whether this opportunity is already saved
   useEffect(() => {
     const loadSavedStatus = async () => {
       const token = localStorage.getItem('token')
@@ -49,7 +48,7 @@ const OpportunityCard = (props) => {
         }
 
         const result = await response.json()
-        const savedIds = result.data.savedOpportunities || []
+        const savedIds = result.data?.savedOpportunities || []
 
         setSaved(
           savedIds.some((item) =>
@@ -64,7 +63,6 @@ const OpportunityCard = (props) => {
     loadSavedStatus()
   }, [props.id])
 
-  // Save or unsave opportunity
   const handleSave = async () => {
     const token = localStorage.getItem('token')
 
@@ -104,7 +102,6 @@ const OpportunityCard = (props) => {
     }
   }
 
-  // Apply for opportunity
   const handleApply = async () => {
     const token = localStorage.getItem('token')
 
@@ -143,7 +140,6 @@ const OpportunityCard = (props) => {
     }
   }
 
-  // Delete opportunity (admin only)
   const handleDelete = async () => {
     if (!isAdmin) {
       alert('Only admins can delete opportunities')
@@ -194,40 +190,77 @@ const OpportunityCard = (props) => {
   }
 
   return (
-    <div>
-      <h2>{props.title}</h2>
-      <p>Company: {props.company}</p>
-      <p>Location: {props.location}</p>
-      <p>Type: {props.type}</p>
+    <article className="opportunity-card">
+      <div className="opportunity-card-top">
+        <span className="opportunity-type">
+          {props.type || 'Opportunity'}
+        </span>
 
-      <button onClick={handleSave} disabled={saving}>
-        {saving
-          ? 'Please wait...'
-          : saved
-            ? '❤️ Saved'
-            : '🤍 Save Opportunity'}
-      </button>
+        {saved && (
+          <span className="saved-indicator">♥ Saved</span>
+        )}
+      </div>
 
-      <button onClick={handleApply} disabled={applying}>
-        {applying ? 'Applying...' : 'Apply Now'}
-      </button>
+      <h2 className="opportunity-title">{props.title}</h2>
 
-      {isAdmin && (
-        <>
-          <button
-            onClick={() => navigate(`/edit-opportunity/${props.id}`)}
-          >
-            Edit
-          </button>
+      <div className="opportunity-details">
+        <p>
+          <span className="detail-icon">▣</span>
+          <span>
+            <small>Company</small>
+            <strong>{props.company}</strong>
+          </span>
+        </p>
 
-          <button onClick={handleDelete}>
-            Delete
-          </button>
-        </>
-      )}
+        <p>
+          <span className="detail-icon">⌖</span>
+          <span>
+            <small>Location</small>
+            <strong>{props.location}</strong>
+          </span>
+        </p>
+      </div>
 
-      <hr />
-    </div>
+      <div className="opportunity-actions">
+        <button
+          className={`action-btn save-btn ${saved ? 'is-saved' : ''}`}
+          onClick={handleSave}
+          disabled={saving}
+        >
+          {saving
+            ? 'Please wait...'
+            : saved
+              ? '♥ Saved'
+              : '♡ Save'}
+        </button>
+
+        <button
+          className="action-btn apply-btn"
+          onClick={handleApply}
+          disabled={applying}
+        >
+          {applying ? 'Applying...' : 'Apply Now →'}
+        </button>
+
+        {isAdmin && (
+          <div className="admin-actions">
+            <button
+              className="action-btn edit-btn"
+              onClick={() => navigate(`/edit-opportunity/${props.id}`)}
+            >
+              ✎ Edit
+            </button>
+
+            <button
+              className="action-btn delete-btn"
+              onClick={handleDelete}
+            >
+              Delete
+            </button>
+          </div>
+        )}
+      </div>
+    </article>
   )
 }
 

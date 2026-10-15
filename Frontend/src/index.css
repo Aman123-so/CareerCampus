@@ -109,3 +109,263 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+
+```css
+/* ===== Global Typography Upgrade ===== */
+
+html {
+  font-size: 17px;
+}
+
+body {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+/* All headings */
+h1 {
+  font-size: clamp(2.2rem, 3vw, 2.8rem);
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: clamp(1.8rem, 2.5vw, 2.2rem);
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: 1.5rem;
+  line-height: 1.35;
+}
+
+h4 {
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+/* Paragraphs and normal text */
+p,
+li,
+label {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+/* Form controls */
+input,
+select,
+textarea,
+button {
+  font: inherit;
+}
+
+/* Navbar links */
+nav a {
+  font-size: 1rem;
+}
+
+/* Small text: keep readable */
+small,
+.text-small {
+  font-size: 0.875rem;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.65rem;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+  }
+}
+
+
+
+
+
+
+
+html {
+  font-size: 20px;
+}
+
+body {
+  font-size: 2rem;
+  line-height: 1.7;
+}
+
+/* Bigger headings */
+h1 {
+  font-size: clamp(2.7rem, 3.5vw, 3.4rem);
+  line-height: 1.2;
+  font-weight: 750;
+}
+
+h2 {
+  font-size: clamp(2.2rem, 3vw, 2.7rem);
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 1.8rem;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+h4 {
+  font-size: 1.5rem;
+  line-height: 1.4;
+  font-weight: 650;
+}
+
+/* Paragraphs and content */
+p,
+li,
+label {
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+/* Inputs, dropdowns and buttons */
+input,
+select,
+textarea,
+button {
+  font: inherit;
+}
+
+input,
+select,
+textarea {
+  padding: 12px 14px;
+}
+
+/* Navbar */
+nav a {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+/* Cards */
+.card h3,
+.opportunity-card h3 {
+  font-size: 1.5rem;
+}
+
+.card p,
+.opportunity-card p {
+  font-size: 1.05rem;
+}
+
+/* Small text should remain readable */
+small,
+.text-small {
+  font-size: 0.95rem;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+
+  h1 {
+    font-size: 2.3rem;
+  }
+
+  h2 {
+    font-size: 1.9rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+
+  p,
+  li,
+  label {
+    font-size: 1rem;
+  }
+}
+
+
+
+
+
+
+
+
+/* Full-width layout for all pages */
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* Common page containers */
+.page-container,
+.profile-page,
+.saved-opportunities-page,
+.my-applications-page {
+  width: 100%;
+  max-width: 100% !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Give content comfortable side spacing */
+.profile-page,
+.saved-opportunities-page,
+.my-applications-page {
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+@media (max-width: 768px) {
+  .profile-page,
+  .saved-opportunities-page,
+  .my-applications-page {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
