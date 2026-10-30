@@ -1,4 +1,4 @@
-# 🎓 Smart Campus Skill & Opportunity Platform
+# 🎓 CareerCampus Skill & Opportunity Platform
 
 A MERN Stack-based web application designed to connect students with internships, jobs, and career opportunities. The platform helps students discover relevant opportunities, apply online, and manage their applications, while administrators can manage opportunities and track student applications.
 
