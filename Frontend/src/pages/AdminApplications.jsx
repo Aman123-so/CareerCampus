@@ -1,4 +1,3 @@
-
 import { useEffect, useMemo, useState } from 'react'
 import './AdminApplications.css'
 
@@ -112,7 +111,12 @@ const AdminApplications = () => {
         opportunity.title,
         opportunity.company,
         student.name,
-        student.email
+        student.email,
+        application.currentYear,
+        application.branch,
+        application.collegeName,
+        application.phoneNumber,
+        application.officialEmail
       ]
         .filter(Boolean)
         .join(' ')
@@ -387,6 +391,69 @@ const AdminApplications = () => {
                         </span>
                       </div>
                     </div>
+
+                    {/* Expandable student details - uses existing CSS classes */}
+                    <details>
+                      <summary>
+                        View Student Details
+                      </summary>
+
+                      <div className="admin-app-details">
+                        <div className="admin-app-detail">
+                          <span className="admin-app-detail-label">
+                            CURRENT YEAR
+                          </span>
+                          <strong>
+                            {application.currentYear || 'Not provided'}
+                          </strong>
+                        </div>
+
+                        <div className="admin-app-detail">
+                          <span className="admin-app-detail-label">
+                            BRANCH
+                          </span>
+                          <strong>
+                            {application.branch || 'Not provided'}
+                          </strong>
+                        </div>
+
+                        <div className="admin-app-detail">
+                          <span className="admin-app-detail-label">
+                            COLLEGE NAME
+                          </span>
+                          <strong>
+                            {application.collegeName || 'Not provided'}
+                          </strong>
+                        </div>
+
+                        <div className="admin-app-detail">
+                          <span className="admin-app-detail-label">
+                            PASSING YEAR
+                          </span>
+                          <strong>
+                            {application.passingYear || 'Not provided'}
+                          </strong>
+                        </div>
+
+                        <div className="admin-app-detail">
+                          <span className="admin-app-detail-label">
+                            PHONE NUMBER
+                          </span>
+                          <strong>
+                            {application.phoneNumber || 'Not provided'}
+                          </strong>
+                        </div>
+
+                        <div className="admin-app-detail">
+                          <span className="admin-app-detail-label">
+                            OFFICIAL EMAIL
+                          </span>
+                          <span className="admin-app-email">
+                            {application.officialEmail || 'Not provided'}
+                          </span>
+                        </div>
+                      </div>
+                    </details>
 
                     <div className="admin-app-card-footer">
                       <span className="admin-app-update-label">

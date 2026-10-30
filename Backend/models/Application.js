@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose')
 
 const applicationSchema = new mongoose.Schema(
@@ -13,6 +12,41 @@ const applicationSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Opportunity',
       required: true
+    },
+
+    currentYear: {
+      type: String,
+      required: true
+    },
+
+    branch: {
+      type: String,
+      required: true,
+      trim: true
+    },
+
+    collegeName: {
+      type: String,
+      required: true,
+      trim: true
+    },
+
+    passingYear: {
+      type: Number,
+      required: true
+    },
+
+    phoneNumber: {
+      type: String,
+      required: true,
+      trim: true
+    },
+
+    officialEmail: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true
     },
 
     status: {

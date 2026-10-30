@@ -237,10 +237,79 @@ const createStatusEmail = ({
 }
 
 // Student applies for an opportunity
+// Student applies for an opportunity
 router.post('/:opportunityId', authMiddleware, async (req, res) => {
   try {
     const { opportunityId } = req.params
 
+    const {
+      currentYear,
+      branch,
+      collegeName,
+      passingYear,
+      phoneNumber,
+      officialEmail
+    } = req.body
+
+    // Check required fields
+    if (
+      !currentYear ||
+      !branch?.trim() ||
+      !collegeName?.trim() ||
+      !passingYear ||
+      !phoneNumber?.trim() ||
+      !officialEmail?.trim()
+    ) {
+      return res.status(400).json({
+        message: 'Please fill all application details'
+      })
+    }
+
+    // Validate current year
+    const allowedYears = [
+      '1st Year',
+      '2nd Year',
+      '3rd Year',
+      '4th Year'
+    ]
+
+    if (!allowedYears.includes(currentYear)) {
+      return res.status(400).json({
+        message: 'Invalid current year'
+      })
+    }
+
+    // Validate phone number
+    if (!/^[6-9]\d{9}$/.test(phoneNumber.trim())) {
+      return res.status(400).json({
+        message: 'Please enter a valid 10-digit phone number'
+      })
+    }
+
+    // Validate email format
+    const email = officialEmail.trim().toLowerCase()
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({
+        message: 'Please enter a valid email address'
+      })
+    }
+
+    // Validate passing year
+    const year = Number(passingYear)
+    const currentCalendarYear = new Date().getFullYear()
+
+    if (
+      !Number.isInteger(year) ||
+      year < currentCalendarYear ||
+      year > currentCalendarYear + 8
+    ) {
+      return res.status(400).json({
+        message: 'Please enter a valid passing year'
+      })
+    }
+
+    // Check opportunity
     const opportunity = await Opportunity.findById(opportunityId)
 
     if (!opportunity) {
@@ -249,15 +318,23 @@ router.post('/:opportunityId', authMiddleware, async (req, res) => {
       })
     }
 
+    // Save application
     const application = await Application.create({
       student: req.userId,
-      opportunity: opportunityId
+      opportunity: opportunityId,
+      currentYear,
+      branch: branch.trim(),
+      collegeName: collegeName.trim(),
+      passingYear: year,
+      phoneNumber: phoneNumber.trim(),
+      officialEmail: email
     })
 
     return res.status(201).json({
       message: 'Application submitted successfully',
       data: application
     })
+
   } catch (error) {
     if (error.code === 11000) {
       return res.status(409).json({
