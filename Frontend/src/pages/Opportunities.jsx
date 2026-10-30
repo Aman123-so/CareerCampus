@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import OpportunityCard from '../components/opportunity/OpportunityCard'
 import './Opportunities.css'
 
-const API_URL = 'http://localhost:5000/api/opportunities'
+const API_URL = '${import.meta.env.VITE_API_URL}/api/opportunities'
 
 const getLoggedInUser = () => {
   try {

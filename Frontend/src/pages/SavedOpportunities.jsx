@@ -25,7 +25,7 @@ const SavedOpportunities = () => {
       setError('')
 
       const response = await fetch(
-        'http://localhost:5000/api/users/saved-opportunities',
+        '${import.meta.env.VITE_API_URL}/api/users/saved-opportunities',
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -66,7 +66,7 @@ const SavedOpportunities = () => {
       setRemovingId(id)
 
       const response = await fetch(
-        `http://localhost:5000/api/opportunities/${id}/save`,
+        `${import.meta.env.VITE_API_URL}/api/opportunities/${id}/save`,
         {
           method: 'DELETE',
           headers: {

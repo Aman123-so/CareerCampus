@@ -14,7 +14,7 @@ const EditOpportunity = () => {
 
   useEffect(() => {
 
-    fetch(`http://localhost:5000/api/opportunities/${id}`)
+    fetch(`${import.meta.env.VITE_API_URL}/api/opportunities/${id}`)
       .then((response) => response.json())
       .then((data) => {
 
@@ -35,7 +35,7 @@ const EditOpportunity = () => {
 
   const handleUpdate = () => {
 
-    fetch(`http://localhost:5000/api/opportunities/${id}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/opportunities/${id}`, {
       method: "PUT",
 
       headers: {

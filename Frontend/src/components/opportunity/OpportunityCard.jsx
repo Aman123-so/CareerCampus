@@ -54,7 +54,7 @@ const OpportunityCard = (props) => {
 
       try {
         const response = await fetch(
-          'http://localhost:5000/api/users/profile',
+          '${import.meta.env.VITE_API_URL}/api/users/profile',
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -100,7 +100,7 @@ const OpportunityCard = (props) => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/opportunities/${props.id}/save`,
+        `${import.meta.env.VITE_API_URL}/api/opportunities/${props.id}/save`,
         {
           method: saved ? 'DELETE' : 'POST',
           headers: {
@@ -163,7 +163,7 @@ const OpportunityCard = (props) => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/applications/${props.id}`,
+        `${import.meta.env.VITE_API_URL}/api/applications/${props.id}`,
         {
           method: 'POST',
           headers: {
@@ -222,7 +222,7 @@ const OpportunityCard = (props) => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/opportunities/${props.id}`,
+        `${import.meta.env.VITE_API_URL}/api/opportunities/${props.id}`,
         {
           method: 'DELETE',
           headers: {

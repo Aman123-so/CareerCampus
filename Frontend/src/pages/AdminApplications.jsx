@@ -30,7 +30,7 @@ const AdminApplications = () => {
       }
 
       const response = await fetch(
-        'http://localhost:5000/api/applications/all',
+        '${import.meta.env.VITE_API_URL}/api/applications/all',
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -69,7 +69,7 @@ const AdminApplications = () => {
       }
 
       const response = await fetch(
-        `http://localhost:5000/api/applications/${applicationId}/status`,
+        `${import.meta.env.VITE_API_URL}/api/applications/${applicationId}/status`,
         {
           method: 'PATCH',
           headers: {
