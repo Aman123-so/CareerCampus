@@ -43,7 +43,7 @@ const Navbar = () => {
 
   return (
     <nav>
-      <h2>Smart Campus</h2>
+      <h2>CareerCampus</h2>
 
       <div className="nav-links">
         <NavLink to="/" end className={getLinkClass}>
