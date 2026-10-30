@@ -30,7 +30,7 @@ const AdminApplications = () => {
       }
 
       const response = await fetch(
-        '${import.meta.env.VITE_API_URL}/api/applications/all',
+        `${import.meta.env.VITE_API_URL}/api/applications/all`,
         {
           headers: {
             Authorization: `Bearer ${token}`

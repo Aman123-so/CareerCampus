@@ -54,7 +54,7 @@ const OpportunityCard = (props) => {
 
       try {
         const response = await fetch(
-          '${import.meta.env.VITE_API_URL}/api/users/profile',
+          `${import.meta.env.VITE_API_URL}/api/users/profile`,
           {
             headers: {
               Authorization: `Bearer ${token}`

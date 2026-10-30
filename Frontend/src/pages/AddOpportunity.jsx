@@ -56,7 +56,7 @@ const AddOpportunity = () => {
       setLoading(true)
 
       const response = await fetch(
-        '${import.meta.env.VITE_API_URL}/api/opportunities',
+        `${import.meta.env.VITE_API_URL}/api/opportunities`,
         {
           method: 'POST',
           headers: {

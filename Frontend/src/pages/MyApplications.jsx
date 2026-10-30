@@ -22,7 +22,7 @@ const MyApplications = () => {
 
       try {
         const response = await fetch(
-          '${import.meta.env.VITE_API_URL}/api/applications/my-applications',
+          `${import.meta.env.VITE_API_URL}/api/applications/my-applications`,
           {
             headers: {
               Authorization: `Bearer ${token}`
