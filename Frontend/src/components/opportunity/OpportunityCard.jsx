@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './OpportunityCard.css'
@@ -15,18 +14,25 @@ const OpportunityCard = (props) => {
 
   try {
     userRole = storedUser
-      ? JSON.parse(storedUser).role || 'student'
+      ? JSON.parse(storedUser).role?.toLowerCase() || 'student'
       : 'student'
   } catch {
     userRole = 'student'
   }
 
   const isAdmin = userRole === 'admin'
+  const token =
+    localStorage.getItem('token') ||
+    localStorage.getItem('userToken')
 
   useEffect(() => {
-    const loadSavedStatus = async () => {
-      const token = localStorage.getItem('token')
+    // Admin ko saved status load karne ki zaroorat nahi hai.
+    if (isAdmin) {
+      setSaved(false)
+      return
+    }
 
+    const loadSavedStatus = async () => {
       if (!token) {
         setSaved(false)
         return
@@ -51,20 +57,23 @@ const OpportunityCard = (props) => {
         const savedIds = result.data?.savedOpportunities || []
 
         setSaved(
-          savedIds.some((item) =>
-            (typeof item === 'string' ? item : item._id) === props.id
-          )
+          savedIds.some((item) => {
+            const savedId =
+              typeof item === 'string' ? item : item?._id
+
+            return savedId === props.id
+          })
         )
       } catch (error) {
-        console.log('Could not load saved status:', error)
+        console.error('Could not load saved status:', error)
       }
     }
 
     loadSavedStatus()
-  }, [props.id])
+  }, [props.id, isAdmin, token])
 
   const handleSave = async () => {
-    const token = localStorage.getItem('token')
+    if (isAdmin) return
 
     if (!token) {
       alert('Please login to save opportunities')
@@ -93,9 +102,9 @@ const OpportunityCard = (props) => {
       }
 
       setSaved(!saved)
-      alert(result.message)
+      alert(result.message || 'Saved status updated successfully')
     } catch (error) {
-      console.log('Save error:', error)
+      console.error('Save error:', error)
       alert('Unable to connect to server')
     } finally {
       setSaving(false)
@@ -103,7 +112,7 @@ const OpportunityCard = (props) => {
   }
 
   const handleApply = async () => {
-    const token = localStorage.getItem('token')
+    if (isAdmin) return
 
     if (!token) {
       alert('Please login to apply')
@@ -133,7 +142,7 @@ const OpportunityCard = (props) => {
 
       alert(result.message || 'Application submitted successfully!')
     } catch (error) {
-      console.log('Application error:', error)
+      console.error('Application error:', error)
       alert('Unable to connect to server')
     } finally {
       setApplying(false)
@@ -141,12 +150,7 @@ const OpportunityCard = (props) => {
   }
 
   const handleDelete = async () => {
-    if (!isAdmin) {
-      alert('Only admins can delete opportunities')
-      return
-    }
-
-    const token = localStorage.getItem('token')
+    if (!isAdmin) return
 
     if (!token) {
       alert('Please login again')
@@ -184,8 +188,18 @@ const OpportunityCard = (props) => {
 
       alert(result.message || 'Opportunity deleted successfully')
     } catch (error) {
-      console.log('Delete error:', error)
+      console.error('Delete error:', error)
       alert('Unable to connect to server')
+    }
+  }
+
+  const handleEdit = () => {
+    if (!isAdmin) return
+
+    if (props.onEdit) {
+      props.onEdit(props.opportunity || props)
+    } else {
+      navigate(`/edit-opportunity/${props.id}`)
     }
   }
 
@@ -196,7 +210,7 @@ const OpportunityCard = (props) => {
           {props.type || 'Opportunity'}
         </span>
 
-        {saved && (
+        {!isAdmin && saved && (
           <span className="saved-indicator">♥ Saved</span>
         )}
       </div>
@@ -222,36 +236,44 @@ const OpportunityCard = (props) => {
       </div>
 
       <div className="opportunity-actions">
-        <button
-          className={`action-btn save-btn ${saved ? 'is-saved' : ''}`}
-          onClick={handleSave}
-          disabled={saving}
-        >
-          {saving
-            ? 'Please wait...'
-            : saved
-              ? '♥ Saved'
-              : '♡ Save'}
-        </button>
+        {!isAdmin && (
+          <>
+            <button
+              type="button"
+              className={`action-btn save-btn ${saved ? 'is-saved' : ''}`}
+              onClick={handleSave}
+              disabled={saving}
+            >
+              {saving
+                ? 'Please wait...'
+                : saved
+                  ? '♥ Saved'
+                  : '♡ Save'}
+            </button>
 
-        <button
-          className="action-btn apply-btn"
-          onClick={handleApply}
-          disabled={applying}
-        >
-          {applying ? 'Applying...' : 'Apply Now →'}
-        </button>
+            <button
+              type="button"
+              className="action-btn apply-btn"
+              onClick={handleApply}
+              disabled={applying}
+            >
+              {applying ? 'Applying...' : 'Apply Now →'}
+            </button>
+          </>
+        )}
 
         {isAdmin && (
           <div className="admin-actions">
             <button
+              type="button"
               className="action-btn edit-btn"
-              onClick={() => navigate(`/edit-opportunity/${props.id}`)}
+              onClick={handleEdit}
             >
               ✎ Edit
             </button>
 
             <button
+              type="button"
               className="action-btn delete-btn"
               onClick={handleDelete}
             >

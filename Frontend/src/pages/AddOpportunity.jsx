@@ -10,7 +10,8 @@ const AddOpportunity = () => {
     title: '',
     company: '',
     location: '',
-    type: 'Internship'
+    type: 'Internship',
+    requiredSkills: ''
   })
 
   const [loading, setLoading] = useState(false)
@@ -41,6 +42,16 @@ const AddOpportunity = () => {
       return
     }
 
+    const requiredSkills = formData.requiredSkills
+      .split(',')
+      .map((skill) => skill.trim())
+      .filter(Boolean)
+
+    if (requiredSkills.length === 0) {
+      setError('Please enter at least one required skill.')
+      return
+    }
+
     try {
       setLoading(true)
 
@@ -56,7 +67,8 @@ const AddOpportunity = () => {
             title: formData.title.trim(),
             company: formData.company.trim(),
             location: formData.location.trim(),
-            type: formData.type
+            type: formData.type,
+            requiredSkills
           })
         }
       )
@@ -64,7 +76,9 @@ const AddOpportunity = () => {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to add opportunity.')
+        throw new Error(
+          data.message || 'Failed to add opportunity.'
+        )
       }
 
       setSuccess('Opportunity published successfully!')
@@ -73,7 +87,9 @@ const AddOpportunity = () => {
         navigate('/opportunities')
       }, 800)
     } catch (err) {
-      setError(err.message || 'Something went wrong. Please try again.')
+      setError(
+        err.message || 'Something went wrong. Please try again.'
+      )
     } finally {
       setLoading(false)
     }
@@ -92,7 +108,9 @@ const AddOpportunity = () => {
 
         <header className="add-opportunity-header">
           <div className="add-header-icon">✦</div>
-          <span className="add-eyebrow">OPPORTUNITY MANAGEMENT</span>
+          <span className="add-eyebrow">
+            OPPORTUNITY MANAGEMENT
+          </span>
           <h1>Add New Opportunity</h1>
           <p>
             Publish a job or internship to help students discover
@@ -106,7 +124,9 @@ const AddOpportunity = () => {
               <h2>Opportunity Details</h2>
               <p>Enter the information students will see.</p>
             </div>
-            <span className="add-required-note">* Required fields</span>
+            <span className="add-required-note">
+              * Required fields
+            </span>
           </div>
 
           {error && (
@@ -138,7 +158,9 @@ const AddOpportunity = () => {
                 maxLength={120}
                 required
               />
-              <small>Use a clear title that describes the role.</small>
+              <small>
+                Use a clear title that describes the role.
+              </small>
             </div>
 
             <div className="add-form-group">
@@ -191,6 +213,24 @@ const AddOpportunity = () => {
               </div>
             </div>
 
+            <div className="add-form-group">
+              <label htmlFor="opportunity-skills">
+                Required Skills <span>*</span>
+              </label>
+              <input
+                id="opportunity-skills"
+                type="text"
+                name="requiredSkills"
+                placeholder="e.g. React, JavaScript, Node.js, MongoDB"
+                value={formData.requiredSkills}
+                onChange={handleChange}
+                required
+              />
+              <small>
+                Enter multiple skills separated by commas.
+              </small>
+            </div>
+
             <div className="add-form-footer">
               <p>Review the details before publishing.</p>
 
@@ -209,7 +249,9 @@ const AddOpportunity = () => {
                   className="add-submit-btn"
                   disabled={loading}
                 >
-                  {loading ? 'Publishing...' : 'Publish Opportunity →'}
+                  {loading
+                    ? 'Publishing...'
+                    : 'Publish Opportunity →'}
                 </button>
               </div>
             </div>

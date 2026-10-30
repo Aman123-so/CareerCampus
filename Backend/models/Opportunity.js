@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
 
+const mongoose = require('mongoose')
 
 const opportunitySchema = new mongoose.Schema({
   title: {
@@ -20,6 +20,12 @@ const opportunitySchema = new mongoose.Schema({
   type: {
     type: String,
     required: true
+  },
+
+  // New field for Phase 2
+  requiredSkills: {
+    type: [String],
+    default: []
   }
 })
 
